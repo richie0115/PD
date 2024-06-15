@@ -11,9 +11,15 @@ public class User implements Serializable{
 
     public User(String name) {
         this.name = name;
+        try {
+            printMinTime();
+        } catch (NullPointerException e) {
+            //UserTime = new ArrayList<>();
+            e.printStackTrace();
+        }
     }
 
-    public void addTimeToRecord(int TimeRecord) {
+    public void addTimeToRecord(int gamemode ,int TimeRecord) {
         UserTime.add(TimeRecord);
     }
 
@@ -21,11 +27,11 @@ public class User implements Serializable{
         System.out.println(name);
     }
 
-    public Integer getMinTime() {
+    public void printMinTime() {
         if(UserTime.isEmpty()) {
-            return null;
+            System.out.println("null");
         } else {
-            return Collections.min(UserTime);
+            System.out.println(Collections.min(UserTime));
         }
     }
 
@@ -36,6 +42,16 @@ public class User implements Serializable{
             return false;
         }
  }
+ public void setUserTime(ArrayList<Integer> userTime) {
+    this.UserTime = userTime;
+}
+
+public Integer getMinTime() {
+    if (UserTime.isEmpty()) {
+        return null;
+    }
+    return UserTime.stream().min(Integer::compare).orElse(null);
+}
 
     public ArrayList<Integer> getUserTime() {
         return UserTime;
