@@ -8,6 +8,8 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import src.Minesweeper.Setter;
+
 public class LocalGame {
     private JScrollPane scrollPane;
     private JPanel menuJPanel;
@@ -47,10 +49,9 @@ public class LocalGame {
         scrollPane.setBounds(0, 0, 200, 430);
         LocalGamePanel.add(scrollPane);
         Menu.userInformation.getName();
-
         Integer time = Menu.userInformation.getMinTime();
 
-        bestTimeLabel = new JLabel("Your Best Time : " + time);
+        bestTimeLabel = new JLabel("Your Best Time : "+time);
         Font boldFont = new Font(bestTimeLabel.getFont().getName(), Font.BOLD, bestTimeLabel.getFont().getSize());
         bestTimeLabel.setFont(boldFont);
         bestTimeLabel.setBounds(200,-20,1000,100);
@@ -67,7 +68,7 @@ public class LocalGame {
                 System.out.println("Icon width: " + boomIcon.getIconWidth() + ", height: " + boomIcon.getIconHeight());
                 if (x >= 75 && x <= 122 && y >= 184 && y <= 240) {
                     // Run process
-                    //Setter settter = new Setter();
+                    Setter settter = new Setter();
                     Integer t = Menu.userInformation.getMinTime();
                     bestTimeLabel.setText("Your Best Time : " + t);
                     LocalGamePanel.add(bestTimeLabel);
