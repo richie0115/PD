@@ -41,7 +41,7 @@ public class Menu extends JFrame implements ActionListener {
     JButton LocalGameButton = new JButton("Local game");
 
 
-    File userfileforSerializable = new File("app/src/main/resources/" + Main.user + ".ser");
+    File userfileforSerializable = new File("resources/" + Main.user + ".ser");
     public static User userInformation;
 
     private UserGame userGame;
@@ -53,7 +53,7 @@ public class Menu extends JFrame implements ActionListener {
             userInformation.getName();
         } else {
             try {
-                FileInputStream fis = new FileInputStream("app/src/main/resources/" + Main.user + ".ser");
+                FileInputStream fis = new FileInputStream("resources/" + Main.user + ".ser");
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 userInformation = (User) ois.readObject();
                 ois.close();
