@@ -42,7 +42,7 @@ public class Menu extends JFrame implements ActionListener {
 
 
     File userfileforSerializable = new File("app/src/main/resources/" + Main.user + ".ser");
-    static User userInformation;
+    public static User userInformation;
 
     private UserGame userGame;
     private LocalGame localGame;
