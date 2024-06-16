@@ -17,12 +17,10 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 public class Menu extends JFrame implements ActionListener {
-    static JOptionPane importAlert = new JOptionPane();
-    static JFrame menuFrame = new JFrame("main menu");
-    static JLabel menuLabel = new JLabel();
-    JLabel welcomJLabel = new JLabel();
-    static JPanel menuJPanel = new JPanel();
-    static JScrollPane scrollPane = new JScrollPane();
+    private static JFrame menuFrame = new JFrame("main menu");
+    private JLabel welcomJLabel = new JLabel();
+    private static JPanel menuJPanel = new JPanel();
+    private static JScrollPane scrollPane = new JScrollPane();
 
     static JTextArea importedProgramTextArea = new JTextArea();
 
