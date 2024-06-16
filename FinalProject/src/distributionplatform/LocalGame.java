@@ -13,11 +13,14 @@ import src.Minesweeper.Setter;
 public class LocalGame {
     private JScrollPane scrollPane;
     private JPanel menuJPanel;
+    private JPanel LocalGamePanel;
     private JFrame menuFrame;
     private JButton backButton;
     private ImageIcon boomIcon;
     private JLabel gameImageLabel;
-    private JLabel bestTimeLabel;
+    private JLabel bestTimeLabel0;
+    private JLabel bestTimeLabel1;
+    private JLabel bestTimeLabel2;
 
     public LocalGame(JScrollPane scrollPane, JPanel menuJPanel, JFrame menuFrame, JTextArea importedProgramTextArea) {
         this.scrollPane = scrollPane;
@@ -41,21 +44,31 @@ public class LocalGame {
     }
 
     private void initialize() {
-        JPanel LocalGamePanel = new JPanel();
+        LocalGamePanel = new JPanel();
         LocalGamePanel.setLayout(null);
         LocalGamePanel.setVisible(true);
         menuJPanel.setVisible(false);
         scrollPane = new JScrollPane(gameImageLabel);
         scrollPane.setBounds(0, 0, 200, 430);
         LocalGamePanel.add(scrollPane);
-        Menu.userInformation.getName();
-        Integer time = Menu.userInformation.getMinTime();
 
-        bestTimeLabel = new JLabel("Your Best Time : "+time);
-        Font boldFont = new Font(bestTimeLabel.getFont().getName(), Font.BOLD, bestTimeLabel.getFont().getSize());
-        bestTimeLabel.setFont(boldFont);
-        bestTimeLabel.setBounds(200,-20,1000,100);
-        LocalGamePanel.add(bestTimeLabel);
+        bestTimeLabel0 = new JLabel("Mode EASY Best Time : "+ Menu.userInformation.getMinTime(0));
+        Font boldFont0 = new Font(bestTimeLabel0.getFont().getName(), Font.BOLD, bestTimeLabel0.getFont().getSize());
+        bestTimeLabel0.setFont(boldFont0);
+        bestTimeLabel0.setBounds(200,-20,1000,100);
+        LocalGamePanel.add(bestTimeLabel0);
+
+        bestTimeLabel1 = new JLabel("Mode MEDIUM Best Time : "+Menu.userInformation.getMinTime(1));
+        Font boldFont1 = new Font(bestTimeLabel1.getFont().getName(), Font.BOLD, bestTimeLabel1.getFont().getSize());
+        bestTimeLabel1.setFont(boldFont1);
+        bestTimeLabel1.setBounds(200,0,1000,100);
+        LocalGamePanel.add(bestTimeLabel1);
+
+        bestTimeLabel2 = new JLabel("Mode HARD Best Time : "+Menu.userInformation.getMinTime(2));
+        Font boldFont2 = new Font(bestTimeLabel2.getFont().getName(), Font.BOLD, bestTimeLabel0.getFont().getSize());
+        bestTimeLabel2.setFont(boldFont2);
+        bestTimeLabel2.setBounds(200,20,1000,100);
+        LocalGamePanel.add(bestTimeLabel2);
 
         menuFrame.add(LocalGamePanel);
 
@@ -69,10 +82,7 @@ public class LocalGame {
                 if (x >= 75 && x <= 122 && y >= 184 && y <= 240) {
                     // Run process
                     Setter settter = new Setter();
-                    Integer t = Menu.userInformation.getMinTime();
-                    bestTimeLabel.setText("Your Best Time : " + t);
-                    LocalGamePanel.add(bestTimeLabel);
-                    menuFrame.add(LocalGamePanel);
+                    setNewRecord();
                 }
             }
         });
@@ -101,6 +111,23 @@ public class LocalGame {
         menuFrame.repaint();
     }
     public void getGameTimeToUserRecord() {
+        
+    }
+    public void setNewRecord() {
+    //mode 0
+    Integer t = Menu.userInformation.getMinTime(0);
+    bestTimeLabel0.setText("Mode EASY Best Time : "+t);
+    LocalGamePanel.add(bestTimeLabel0);
+    //mode 1
+    t = Menu.userInformation.getMinTime(1);
+    bestTimeLabel1.setText("Mode MEDIUM Best Time : "+t);
+    LocalGamePanel.add(bestTimeLabel1);
+    //mode 2
+    t = Menu.userInformation.getMinTime(2);
+    bestTimeLabel2.setText("Mode HARD Best Time : "+t);
+    LocalGamePanel.add(bestTimeLabel2);
+
+    menuFrame.add(LocalGamePanel);
         
     }
 }
