@@ -34,10 +34,6 @@ public class Main implements ActionListener, Serializable {
     private static String accountPath = "/resources/account";
     private static File file = new File(accountPath);
 
-    public static File getFile() {
-        return file;
-    }
-
     @SuppressWarnings("unchecked")
     public Main() {
         try (InputStream fis = CreateUser.class.getResourceAsStream("/resources/account.ser");
@@ -46,8 +42,7 @@ public class Main implements ActionListener, Serializable {
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
-
-        // Login GUI setup
+        // Login
         setupLoginGUI();
     }
 
@@ -91,6 +86,10 @@ public class Main implements ActionListener, Serializable {
         CreateUserButton.addActionListener(this);
 
         mFrame.setVisible(true);
+    }
+    
+    public static File getFile() {
+        return file;
     }
 
     public void actionPerformed(ActionEvent e) {
