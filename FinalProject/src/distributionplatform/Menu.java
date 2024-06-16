@@ -1,189 +1,81 @@
 package src.distributionplafrom;
 
 import javax.swing.*;
-
-import src.Main;
-import src.Minesweeper.User;
-
-import java.awt.event.WindowEvent;
-import java.io.FileOutputStream;
-import java.io.FileInputStream;
-import java.io.ObjectOutputStream;
-import java.io.ObjectInputStream;
-import java.io.IOException;
-import java.awt.Desktop;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.text.BadLocationException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 
-public class Menu extends JFrame implements ActionListener {
-    private static JFrame menuFrame = new JFrame("main menu");
-    private JLabel welcomJLabel = new JLabel();
-    private static JPanel menuJPanel = new JPanel();
-    private static JScrollPane scrollPane = new JScrollPane();
+public class UserGame {
+    private JScrollPane scrollPane;
+    private JPanel menuJPanel;
+    private JTextArea importedProgramTextArea;
+    private JFrame menuFrame;
+    private JButton backButton;
+    private JLabel linetextLabel;
+    public UserGame(JScrollPane scrollPane, JPanel menuJPanel, JFrame menuFrame, JTextArea importedProgramTextArea) {
+        this.scrollPane = scrollPane;
+        this.menuJPanel = menuJPanel;
+        this.menuFrame = menuFrame;
+        this.importedProgramTextArea = importedProgramTextArea;
 
-    static JTextArea importedProgramTextArea = new JTextArea();
-
-    static String lineText;
-
-    JMenuBar menuBar;
-    JMenu FileMenu;
-    JMenu EditMenu;
-    JMenu HelpMenu;
-    JMenu ActionMenu;
-    JMenuItem ImportiItem = new JMenuItem("Import");
-    JMenuItem Run = new JMenuItem("Run");
-    JMenuItem Back = new JMenuItem("Back");
-    JButton logoutButton = new JButton("Logout");
-    JButton userGameButton = new JButton("User's game");
-    JButton LocalGameButton = new JButton("Local game");
-
-
-    File userfileforSerializable = new File("resources/" + Main.user + ".ser");
-    public static User userInformation;
-
-    private UserGame userGame;
-    private LocalGame localGame;
-
-    public Menu() {
-        if (!userfileforSerializable.exists()) {
-            userInformation = new User(Main.user);
-            userInformation.getName();
-        } else {
-            try {
-                FileInputStream fis = new FileInputStream("resources/" + Main.user + ".ser");
-                ObjectInputStream ois = new ObjectInputStream(fis);
-                userInformation = (User) ois.readObject();
-                ois.close();
-                fis.close();
-            } catch (IOException c) {
-                c.printStackTrace();
-            } catch (ClassNotFoundException c) {
-                c.printStackTrace();
-            }
-        }
-        userInformation.getName();
-        menuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        menuFrame.setSize(420, 420);
-        menuJPanel.setLayout(null);
-
-        menuFrame.add(menuJPanel);
-        welcomJLabel = new JLabel("welcome ! " + Main.user);
-        welcomJLabel.setBounds(10, 10, 120, 25);
-        menuJPanel.add(welcomJLabel);
-
-        menuBar = new JMenuBar();
-        FileMenu = new JMenu("File");
-        ActionMenu = new JMenu("Action");
-        EditMenu = new JMenu("Edit");
-        HelpMenu = new JMenu("Help");
-
-        ImportiItem = new JMenuItem("Import");
-        Run = new JMenuItem("Run");
-        Back = new JMenuItem("Back");
-
-        ActionMenu.add(Back);
-        FileMenu.add(Run);
-        Run.addActionListener(this);
-        FileMenu.add(ImportiItem);
-        ImportiItem.addActionListener(this);
-
-        logoutButton.setBounds(320, 300, 80, 25);
-        menuJPanel.add(logoutButton);
-        logoutButton.addActionListener(this);
-
-        LocalGameButton.setBounds(10, 60, 140, 25);
-        menuJPanel.add(LocalGameButton);
-        LocalGameButton.addActionListener(this);
-
-        userGameButton.setBounds(10, 30, 140, 25);
-        menuJPanel.add(userGameButton);
-        userGameButton.addActionListener(this);
-
-        menuBar.add(FileMenu);
-        menuBar.add(EditMenu);
-        menuBar.add(HelpMenu);
-        menuBar.add(ActionMenu);
-
-        menuFrame.setJMenuBar(menuBar);
-        menuFrame.setVisible(true);
+        initialize();
     }
 
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == ImportiItem) {
-            JFileChooser FileChooser = new JFileChooser();
-            int ChosenFile = FileChooser.showOpenDialog(null);
-            if (ChosenFile == JFileChooser.APPROVE_OPTION) {
-                File file = new File(FileChooser.getSelectedFile().getAbsolutePath());
-                String fileName = file.getName();
-                String filepath = file.getAbsolutePath();
-                importAlert(fileName);
-                importedProgramTextArea.append(filepath + "\n");
-            }
-        }
-        if (e.getSource() == Run) {
-                // run
+    private void initialize() {
+        JPanel backJPanel = new JPanel();
+
+        linetextLabel = new JLabel("選擇：");
+        linetextLabel.setBounds(200, 10, 240, 25);
+        backJPanel.add(linetextLabel);
+
+        backJPanel.setLayout(null);
+        backJPanel.setVisible(true);
+        menuJPanel.setVisible(false);
+        scrollPane = new JScrollPane(importedProgramTextArea);
+        scrollPane.setBounds(0,0,200,430);
+        backJPanel.add(scrollPane);
+        menuFrame.add(backJPanel);
+
+        importedProgramTextArea.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
                 try {
-                    System.out.println(lineText+"123");
-                    File fileToOpen = new File(lineText);
-                    
-    
-                    if (!Desktop.isDesktopSupported()) {
-                        System.out.println("Desktop is not supported");
-                        return;
-                    }
-                    Desktop desktop = Desktop.getDesktop();
-                    if (!fileToOpen.exists()) {
-                        JOptionPane.showMessageDialog(menuFrame, "File does not exist", "Warning", JOptionPane.INFORMATION_MESSAGE);
-                        return;
-                    }
-                    desktop.open(fileToOpen);
-                } catch (IOException ex) {
+                    int offset = importedProgramTextArea.viewToModel2D(e.getPoint());
+                    int line = importedProgramTextArea.getLineOfOffset(offset);
+                    int start = importedProgramTextArea.getLineStartOffset(line);
+                    int end = importedProgramTextArea.getLineEndOffset(line);
+                    Menu.lineText = importedProgramTextArea.getText(start, end - start).replaceAll("\\s+", "").trim();
+                    linetextLabel.setText("選擇："+Menu.lineText);
+                    JOptionPane.showMessageDialog(menuFrame, "Line clicked: " + Menu.lineText, "Event Triggered", JOptionPane.INFORMATION_MESSAGE);
+                } catch (BadLocationException ex) {
                     ex.printStackTrace();
                 }
-            
-        }
-        if (e.getSource() == Back) {
-            menuJPanel.setVisible(true);
-            menuFrame.add(menuJPanel);
-            menuFrame.repaint();
-        }
-        if (e.getSource() == logoutButton) {
-            // store game
-            SerializableItem("resources/" + Main.user + ".ser");
-            menuFrame.dispatchEvent(new WindowEvent(menuFrame, WindowEvent.WINDOW_CLOSING));
-        }
-        if (e.getSource() == userGameButton) {
-            if (userGame != null) {
-                userGame.closeUserGame();
-                userGame = null;
             }
-            userGame = new UserGame(scrollPane, menuJPanel, menuFrame, importedProgramTextArea);
-        }
-        if (e.getSource() == LocalGameButton) {
-            if (localGame != null) {
-                localGame.closeUserGame();
-                localGame = null;
+        });
+
+        backButton = new JButton("Back to Menu");
+        backButton.setBounds(250, 300, 140, 25);
+        
+        backJPanel.add(backButton);
+        menuFrame.add(backJPanel);
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                closeUserGame();
+                backJPanel.setVisible(false);
             }
-            localGame = new LocalGame(scrollPane, menuJPanel, menuFrame, importedProgramTextArea);
-        }
+        });
+
+        menuFrame.revalidate();
+        menuFrame.repaint();
     }
 
-    public void importAlert(String fileName) {
-        JOptionPane.showMessageDialog(menuFrame, "Import successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    public void SerializableItem(String name) {
-        try {
-            FileOutputStream fos = new FileOutputStream(name);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            userInformation.getName();
-            oos.writeObject(userInformation);
-
-            oos.close();
-            fos.close();
-        } catch (IOException x) {
-            x.printStackTrace();
-        }
+    public void closeUserGame() {
+        menuFrame.remove(scrollPane);
+        menuFrame.remove(backButton);
+        menuJPanel.setVisible(true);
+        menuFrame.repaint();
     }
 }
